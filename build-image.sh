@@ -1,10 +1,12 @@
 #!/bin/bash -ex
 ### Build a docker image for ubuntu i386.
 
+set -e
+
 ### settings
 arch=i386
 suite=${1:-trusty}
-chroot_dir="/var/chroot/$suite"
+chroot_dir="/var/chroot/builder-ubuntu32bit/$suite"
 apt_mirror='http://archive.ubuntu.com/ubuntu'
 docker_image="32bit/ubuntu:${1:-14.04}"
 
@@ -76,11 +78,11 @@ umount $chroot_dir/proc
 tar cfz ubuntu.tgz -C $chroot_dir .
 
 ### import this tar archive into a docker image:
-cat ubuntu.tgz | docker import - $docker_image
+echo "cat ubuntu.tgz | docker import - $docker_image"
 
 # ### push image to Docker Hub
 # docker push $docker_image
 
 ### cleanup
-rm ubuntu.tgz
+echo rm ubuntu.tgz
 rm -rf $chroot_dir
